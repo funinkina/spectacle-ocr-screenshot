@@ -1,1 +1,122 @@
-# spectacle-ocr-screenshot
+# Spectacle OCR Screenshot
+
+A simple Qt application that integrates KDE Spectacle screenshot tool with Tesseract OCR to extract text from screenshots.
+
+## Features
+
+- Capture screenshots using KDE's Spectacle tool
+- Extract text from screenshots using Tesseract OCR
+- Support for multiple languages
+- Edit extracted text before saving
+- Copy text to clipboard
+- Save text to file
+
+## Requirements
+
+- Qt 6.x
+- Tesseract OCR 
+- Leptonica
+- KDE Spectacle
+
+## Installation
+
+### From Packages
+
+Packages are not yet available. You can build from source for now.
+
+### Building from Source
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/yourusername/spectacle-ocr-screenshot.git
+cd spectacle-ocr-screenshot
+```
+
+2. Install dependencies:
+
+For Arch Linux:
+```bash
+sudo pacman -S qt6-base tesseract leptonica spectacle
+```
+
+For Ubuntu/Debian:
+```bash
+sudo apt install qt6-base-dev libtesseract-dev libleptonica-dev spectacle
+```
+
+For Fedora:
+```bash
+sudo dnf install qt6-qtbase-devel tesseract-devel leptonica-devel spectacle
+```
+
+3. Build the project:
+
+```bash
+qmake6
+make
+```
+
+### You can also build using `cmake`:
+Make sure you have cmake installed~
+
+```bash
+mkdir build && cd build
+cmake ..
+make
+```
+
+## Usage
+
+Run the application:
+
+```bash
+./spectacle-ocr-screenshot
+```
+
+The application will:
+1. Launch Spectacle in region selection mode
+2. After capturing, the screenshot will be processed with OCR
+3. The extracted text will be displayed in the application window
+4. You can edit the text, copy it to clipboard or save it to a file
+
+### Command Line Options
+
+- `--lang <language>`: Specify the language(s) for OCR (default: eng)
+  - Use ISO 639-3 language codes
+  - For multiple languages, join them with '+' (e.g., `--lang eng+hin` for English and Hindi)
+
+Examples:
+```bash
+# Use English OCR (default)
+./spectacle-ocr-screenshot
+
+# Use German OCR
+./spectacle-ocr-screenshot --lang deu
+
+# Use multiple languages (English and Spanish)
+./spectacle-ocr-screenshot --lang eng+spa
+```
+
+## Available Languages
+
+Tesseract OCR supports many languages. Some common language codes:
+
+- `eng` - English
+- `deu` - German
+- `fra` - French
+- `spa` - Spanish
+- `ita` - Italian
+- `rus` - Russian
+- `jpn` - Japanese
+- `kor` - Korean
+- `chi_sim` - Chinese (Simplified)
+- `chi_tra` - Chinese (Traditional)
+- `ara` - Arabic
+- `hin` - Hindi
+
+You may need to install language packs for Tesseract OCR separately.
+
+## License
+
+MIT
