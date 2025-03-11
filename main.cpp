@@ -36,7 +36,6 @@ OcrResult extractText(const QString& imagePath, const QString& language) {
 
     tesseract::TessBaseAPI* ocr = new tesseract::TessBaseAPI();
 
-    // Initialize tesseract with specified language
     if (ocr->Init(nullptr, language.toUtf8().constData())) {
         delete ocr;
         result.success = false;
@@ -70,25 +69,19 @@ OcrResult extractText(const QString& imagePath, const QString& language) {
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
 
-    // Set up command line parser
     QCommandLineParser parser;
     parser.setApplicationDescription("Screenshot OCR Tool");
     parser.addHelpOption();
 
-    // Add language option with updated description for multiple languages
     QCommandLineOption langOption(
         QStringList() << "lang",
         "Language(s) for OCR (e.g., eng, hin, or eng+hin for multiple languages)",
         "language", "eng");
     parser.addOption(langOption);
-
-    // Process the command line arguments
     parser.process(app);
 
-    // Get the language option value
     QString language = parser.value(langOption);
 
-    // Display selected language in window title
     QWidget window;
     window.setWindowTitle("Screenshot OCR Tool - Language: " + language);
     window.resize(500, 400);
