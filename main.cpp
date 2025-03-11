@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
 
     QCommandLineParser parser;
-    parser.setApplicationDescription("Screenshot OCR Tool");
+    parser.setApplicationDescription("Extract text from spectacle screenshots using OCR");
     parser.addHelpOption();
 
     QCommandLineOption langOption(
@@ -83,16 +83,16 @@ int main(int argc, char* argv[]) {
     QString language = parser.value(langOption);
 
     QWidget window;
-    window.setWindowTitle("Screenshot OCR Tool - Language: " + language);
+    window.setWindowTitle("Spectacle Screenshot OCR - Language: " + language);
     window.resize(500, 400);
 
     QVBoxLayout* layout = new QVBoxLayout();
 
-    QLabel* label = new QLabel("Processing screenshot...");
+    QLabel* label = new QLabel();
     layout->addWidget(label);
 
     QTextEdit* textEdit = new QTextEdit();
-    textEdit->setMinimumHeight(200);
+    textEdit->setMinimumHeight(100);
     layout->addWidget(textEdit);
 
     QWidget* buttonContainer = new QWidget();
@@ -108,32 +108,6 @@ int main(int argc, char* argv[]) {
     window.setLayout(layout);
 
     QString tempPath = QDir::tempPath() + "/screenshot.png";
-
-    auto processScreenshot = [&]() {
-        label->setText("Taking screenshot...");
-        QApplication::processEvents();
-
-        if (takeScreenshot(tempPath)) {
-            label->setText("Extracting text...");
-            QApplication::processEvents();
-
-            OcrResult result = extractText(tempPath, language);
-
-            if (!result.success) {
-                textEdit->setText("");
-                label->setText(result.errorMessage);
-            }
-            else {
-                textEdit->setText(result.text);
-                label->setText("Text extracted successfully");
-            }
-        }
-        else {
-            label->setText("Failed to take screenshot");
-            QMessageBox::critical(&window, "Error",
-                "Failed to launch Spectacle or take screenshot");
-        }
-        };
 
     QObject::connect(copyButton, &QPushButton::clicked, [&]() {
         if (!textEdit->toPlainText().isEmpty()) {
