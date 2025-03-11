@@ -1,23 +1,25 @@
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QTextEdit>
+#include <leptonica/allheaders.h>
+#include <tesseract/baseapi.h>
+
+#include <QtCore/QCommandLineParser>
+#include <QtCore/QDir>
 #include <QtCore/QProcess>
 #include <QtCore/QTemporaryFile>
-#include <QtCore/QDir>
-#include <QtWidgets/QMessageBox>
 #include <QtCore/QTimer>
-#include <QtWidgets/QFileDialog>
 #include <QtGui/QClipboard>
-#include <QtCore/QCommandLineParser>
-#include <tesseract/baseapi.h>
-#include <leptonica/allheaders.h>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QTextEdit>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QWidget>
 
 bool takeScreenshot(const QString& outputPath) {
     QProcess process;
-    process.start("spectacle", QStringList() << "-b" << "-r" << "-n" << "-o" << outputPath);
+    process.start("spectacle", QStringList()
+        << "-b" << "-r" << "-n" << "-o" << outputPath);
     process.waitForFinished();
     return process.exitCode() == 0;
 }
@@ -38,11 +40,11 @@ OcrResult extractText(const QString& imagePath, const QString& language) {
     if (ocr->Init(nullptr, language.toUtf8().constData())) {
         delete ocr;
         result.success = false;
-        result.errorMessage = "Error initializing Tesseract OCR for language: " + language;
+        result.errorMessage =
+            "Error initializing Tesseract OCR for language: " + language;
         return result;
     }
 
-    // Open image with Leptonica
     Pix* image = pixRead(imagePath.toUtf8().constData());
     if (!image) {
         ocr->End();
@@ -74,8 +76,10 @@ int main(int argc, char* argv[]) {
     parser.addHelpOption();
 
     // Add language option with updated description for multiple languages
-    QCommandLineOption langOption(QStringList() << "lang",
-        "Language(s) for OCR (e.g., eng, hin, or eng+hin for multiple languages)", "language", "eng");
+    QCommandLineOption langOption(
+        QStringList() << "lang",
+        "Language(s) for OCR (e.g., eng, hin, or eng+hin for multiple languages)",
+        "language", "eng");
     parser.addOption(langOption);
 
     // Process the command line arguments
@@ -113,12 +117,10 @@ int main(int argc, char* argv[]) {
     QString tempPath = QDir::tempPath() + "/screenshot.png";
 
     auto processScreenshot = [&]() {
-
         label->setText("Taking screenshot...");
         QApplication::processEvents();
 
-        if (takeScreenshot(tempPath))
-        {
+        if (takeScreenshot(tempPath)) {
             label->setText("Extracting text...");
             QApplication::processEvents();
 
@@ -133,14 +135,13 @@ int main(int argc, char* argv[]) {
                 label->setText("Text extracted successfully");
             }
         }
-        else
-        {
+        else {
             label->setText("Failed to take screenshot");
-            QMessageBox::critical(&window, "Error", "Failed to launch Spectacle or take screenshot");
+            QMessageBox::critical(&window, "Error",
+                "Failed to launch Spectacle or take screenshot");
         }
         };
 
-    // Connect copy button to clipboard functionality
     QObject::connect(copyButton, &QPushButton::clicked, [&]() {
         if (!textEdit->toPlainText().isEmpty()) {
             QApplication::clipboard()->setText(textEdit->toPlainText());
@@ -148,57 +149,56 @@ int main(int argc, char* argv[]) {
         }
         else {
             label->setText("No text to copy");
-        } });
+        }
+        });
 
-        // Connect save button to file save functionality
-        QObject::connect(saveButton, &QPushButton::clicked, [&]() {
-            if (!textEdit->toPlainText().isEmpty()) {
-                QString fileName = QFileDialog::getSaveFileName(&window,
-                    "Save OCR Text", QDir::homePath(), "Text Files (*.txt);;All Files (*)");
+    QObject::connect(saveButton, &QPushButton::clicked, [&]() {
+        if (!textEdit->toPlainText().isEmpty()) {
+            QString fileName = QFileDialog::getSaveFileName(
+                &window, "Save OCR Text", QDir::homePath(),
+                "Text Files (*.txt);;All Files (*)");
 
-                if (!fileName.isEmpty()) {
-                    QFile file(fileName);
-                    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-                        QTextStream out(&file);
-                        out << textEdit->toPlainText();
-                        file.close();
-                        label->setText("Text saved to file");
-                    }
-                    else {
-                        label->setText("Failed to save file");
-                        QMessageBox::critical(&window, "Error", "Failed to save the file");
-                    }
-                }
-            }
-            else {
-                label->setText("No text to save");
-            } });
-
-            // Take screenshot first before showing window
-            if (takeScreenshot(tempPath)) {
-                // Process the screenshot
-                OcrResult result = extractText(tempPath, language);
-
-                if (!result.success) {
-                    textEdit->setText("");
-                    label->setText(result.errorMessage);
+            if (!fileName.isEmpty()) {
+                QFile file(fileName);
+                if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                    QTextStream out(&file);
+                    out << textEdit->toPlainText();
+                    file.close();
+                    label->setText("Text saved to file");
                 }
                 else {
-                    // Update UI with results
-                    textEdit->setText(result.text);
-                    label->setText("Text extracted successfully. You can edit the text before copying or saving.");
+                    label->setText("Failed to save file");
+                    QMessageBox::critical(&window, "Error", "Failed to save the file");
                 }
-
-                // Show window after screenshot is processed
-                window.show();
             }
-            else {
-                // Show window with error message if screenshot fails
-                textEdit->setText("");
-                label->setText("Error occurred while taking screenshot");
-                window.show();
-                QMessageBox::critical(&window, "Error", "Failed to launch Spectacle or take screenshot");
-            }
+        }
+        else {
+            label->setText("No text to save");
+        }
+        });
 
-            return app.exec();
+    if (takeScreenshot(tempPath)) {
+        OcrResult result = extractText(tempPath, language);
+
+        if (!result.success) {
+            textEdit->setText("");
+            label->setText(result.errorMessage);
+        }
+        else {
+            textEdit->setText(result.text);
+            label->setText(
+                "Text extracted successfully. You can edit the text before copying "
+                "or saving.");
+        }
+        window.show();
+    }
+    else {
+        textEdit->setText("");
+        label->setText("Error occurred while taking screenshot");
+        window.show();
+        QMessageBox::critical(&window, "Error",
+            "Failed to launch Spectacle or take screenshot");
+    }
+
+    return app.exec();
 }
