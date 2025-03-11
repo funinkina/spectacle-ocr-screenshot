@@ -129,4 +129,4 @@ You may need to install language packs for Tesseract OCR separately.
 
 ## License
 
-MIT
+[MIT](https://github.com/funinkina/spectacle-ocr-screenshot/blob/main/LICENSE)
