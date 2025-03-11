@@ -9,7 +9,6 @@ SOURCES += main.cpp
 
 # Use pkg-config to find Tesseract and Leptonica
 unix:!macx {
+    CONFIG += link_pkgconfig
     PKGCONFIG += tesseract lept
-    LIBS += `pkg-config --libs tesseract lept`
-    INCLUDEPATH += `pkg-config --cflags tesseract lept`
 }

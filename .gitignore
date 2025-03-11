@@ -37,6 +37,7 @@ build
 *.exe
 *.out
 *.app
+spectacle-ocr-screenshot
 
 ### Linux ###
 *~

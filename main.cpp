@@ -1,20 +1,21 @@
 #include <leptonica/allheaders.h>
 #include <tesseract/baseapi.h>
 
-#include <QtCore/QCommandLineParser>
-#include <QtCore/QDir>
-#include <QtCore/QProcess>
-#include <QtCore/QTemporaryFile>
-#include <QtCore/QTimer>
-#include <QtGui/QClipboard>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QFileDialog>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QTextEdit>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QWidget>
+#include <QCommandLineParser>
+#include <QDir>
+#include <QProcess>
+#include <QTemporaryFile>
+#include <QTimer>
+#include <QClipboard>
+#include <QApplication>
+#include <QFileDialog>
+#include <QLabel>
+#include <QMessageBox>
+#include <QPushButton>
+#include <QTextEdit>
+#include <QVBoxLayout>
+#include <QWidget>
+#include <QHBoxLayout>
 
 bool takeScreenshot(const QString& outputPath) {
     QProcess process;
