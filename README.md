@@ -2,6 +2,8 @@
 
 A simple Qt application that integrates KDE Spectacle screenshot tool with Tesseract OCR to extract text from screenshots.
 
+![Screenshot](screenshot.png)
+
 ## Features
 
 - Capture screenshots using KDE's Spectacle tool
