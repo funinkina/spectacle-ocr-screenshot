@@ -53,12 +53,13 @@ sudo dnf install qt6-qtbase-devel tesseract-devel leptonica-devel spectacle
 3. Build the project:
 
 ```bash
-qmake6
+git clone https://github.com/funinkina/spectacle-ocr-screenshot
+qmake6 simple.pro
 make
 ```
 
 ### You can also build using `cmake`:
-Make sure you have cmake installed~
+Make sure you have cmake installed!
 
 ```bash
 mkdir build && cd build
@@ -74,9 +75,18 @@ Run the application:
 ./spectacle-ocr-screenshot
 ```
 
-The application will:
+## Recommended Usage
+Create a symlink to the executable in your local `PATH` for easy access:
+
+```bash
+ln -s spectacle-ocr-screenshot ~/.local/bin/
+```
+
+Then you can run the application from anywhere using or by assigning a keyboard shortcut to `spectacle-ocr-screenshot`
+
+## The application will:
 1. Launch Spectacle in region selection mode
-2. After capturing, the screenshot will be processed with OCR
+2. After capturing, click on save, this will save to `/tmp`
 3. The extracted text will be displayed in the application window
 4. You can edit the text, copy it to clipboard or save it to a file
 
