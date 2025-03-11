@@ -21,13 +21,24 @@ bool takeScreenshot(const QString& outputPath) {
     return process.exitCode() == 0;
 }
 
-QString extractText(const QString& imagePath) {
+struct OcrResult {
+    QString text;
+    bool success;
+    QString errorMessage;
+};
+
+OcrResult extractText(const QString& imagePath) {
+    OcrResult result;
+    result.success = true;
+
     tesseract::TessBaseAPI* ocr = new tesseract::TessBaseAPI();
 
     // Initialize tesseract with English language
     if (ocr->Init(nullptr, "eng")) {
         delete ocr;
-        return "Error initializing Tesseract OCR";
+        result.success = false;
+        result.errorMessage = "Error initializing Tesseract OCR";
+        return result;
     }
 
     // Open image with Leptonica
@@ -35,13 +46,15 @@ QString extractText(const QString& imagePath) {
     if (!image) {
         ocr->End();
         delete ocr;
-        return "Failed to load image";
+        result.success = false;
+        result.errorMessage = "Failed to load image";
+        return result;
     }
 
     ocr->SetImage(image);
 
     char* outText = ocr->GetUTF8Text();
-    QString result = QString::fromUtf8(outText);
+    result.text = QString::fromUtf8(outText);
 
     delete[] outText;
     pixDestroy(&image);
@@ -91,14 +104,14 @@ int main(int argc, char* argv[]) {
             label->setText("Extracting text...");
             QApplication::processEvents();
 
-            QString extractedText = extractText(tempPath);
+            OcrResult result = extractText(tempPath);
 
-            if (extractedText == "Failed to load image" || extractedText == "Error initializing Tesseract OCR") {
-                textEdit->setText(extractedText);
-                //QMessageBox::critical(&window, "Error", extractedText);
+            if (!result.success) {
+                textEdit->setText("");
+                label->setText(result.errorMessage);
             }
             else {
-                textEdit->setText(extractedText);
+                textEdit->setText(result.text);
                 label->setText("Text extracted successfully");
             }
         }
@@ -146,19 +159,25 @@ int main(int argc, char* argv[]) {
             // Take screenshot first before showing window
             if (takeScreenshot(tempPath)) {
                 // Process the screenshot
-                QString extractedText = extractText(tempPath);
+                OcrResult result = extractText(tempPath);
 
-                // Update UI with results
-                textEdit->setText(extractedText);
-                label->setText("Text extracted successfully. You can edit the text before copying or saving.");
+                if (!result.success) {
+                    textEdit->setText("");
+                    label->setText(result.errorMessage);
+                }
+                else {
+                    // Update UI with results
+                    textEdit->setText(result.text);
+                    label->setText("Text extracted successfully. You can edit the text before copying or saving.");
+                }
 
                 // Show window after screenshot is processed
                 window.show();
             }
             else {
                 // Show window with error message if screenshot fails
-                textEdit->setText("Failed to take screenshot");
-                label->setText("Error occurred");
+                textEdit->setText("");
+                label->setText("Error occurred while taking screenshot");
                 window.show();
                 QMessageBox::critical(&window, "Error", "Failed to launch Spectacle or take screenshot");
             }
