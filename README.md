@@ -22,7 +22,7 @@ A simple Qt application that integrates KDE Spectacle screenshot tool with Tesse
 
 ### From Packages
 
-Packages are not yet available. You can build from source for now.
+You can download the pre-built packages from the [Releases Page](https://github.com/funinkina/spectacle-ocr-screenshot/releases/).
 
 ### Building from Source
 
