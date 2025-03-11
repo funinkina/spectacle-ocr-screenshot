@@ -11,6 +11,7 @@
 #include <QtCore/QTimer>
 #include <QtWidgets/QFileDialog>
 #include <QtGui/QClipboard>
+#include <QtCore/QCommandLineParser>
 #include <tesseract/baseapi.h>
 #include <leptonica/allheaders.h>
 
@@ -27,17 +28,17 @@ struct OcrResult {
     QString errorMessage;
 };
 
-OcrResult extractText(const QString& imagePath) {
+OcrResult extractText(const QString& imagePath, const QString& language) {
     OcrResult result;
     result.success = true;
 
     tesseract::TessBaseAPI* ocr = new tesseract::TessBaseAPI();
 
-    // Initialize tesseract with English language
-    if (ocr->Init(nullptr, "eng")) {
+    // Initialize tesseract with specified language
+    if (ocr->Init(nullptr, language.toUtf8().constData())) {
         delete ocr;
         result.success = false;
-        result.errorMessage = "Error initializing Tesseract OCR";
+        result.errorMessage = "Error initializing Tesseract OCR for language: " + language;
         return result;
     }
 
@@ -67,8 +68,25 @@ OcrResult extractText(const QString& imagePath) {
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
 
+    // Set up command line parser
+    QCommandLineParser parser;
+    parser.setApplicationDescription("Screenshot OCR Tool");
+    parser.addHelpOption();
+
+    // Add language option with updated description for multiple languages
+    QCommandLineOption langOption(QStringList() << "lang",
+        "Language(s) for OCR (e.g., eng, hin, or eng+hin for multiple languages)", "language", "eng");
+    parser.addOption(langOption);
+
+    // Process the command line arguments
+    parser.process(app);
+
+    // Get the language option value
+    QString language = parser.value(langOption);
+
+    // Display selected language in window title
     QWidget window;
-    window.setWindowTitle("Screenshot OCR Tool");
+    window.setWindowTitle("Screenshot OCR Tool - Language: " + language);
     window.resize(500, 400);
 
     QVBoxLayout* layout = new QVBoxLayout();
@@ -104,7 +122,7 @@ int main(int argc, char* argv[]) {
             label->setText("Extracting text...");
             QApplication::processEvents();
 
-            OcrResult result = extractText(tempPath);
+            OcrResult result = extractText(tempPath, language);
 
             if (!result.success) {
                 textEdit->setText("");
@@ -159,7 +177,7 @@ int main(int argc, char* argv[]) {
             // Take screenshot first before showing window
             if (takeScreenshot(tempPath)) {
                 // Process the screenshot
-                OcrResult result = extractText(tempPath);
+                OcrResult result = extractText(tempPath, language);
 
                 if (!result.success) {
                     textEdit->setText("");
