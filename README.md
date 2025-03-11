@@ -1,0 +1,1 @@
+# spectacle-ocr-screenshot
