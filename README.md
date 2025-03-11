@@ -79,7 +79,7 @@ Run the application:
 Create a symlink to the executable in your local `PATH` for easy access:
 
 ```bash
-ln -s spectacle-ocr-screenshot ~/.local/bin/
+sudo ln -s spectacle-ocr-screenshot /usr/local/bin/
 ```
 
 Then you can run the application from anywhere using or by assigning a keyboard shortcut to `spectacle-ocr-screenshot`
