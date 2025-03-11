@@ -13,10 +13,10 @@ pkg_check_modules(Tesseract REQUIRED IMPORTED_TARGET tesseract)
 pkg_check_modules(Leptonica REQUIRED IMPORTED_TARGET lept)
 
 # Create executable
-add_executable(Screenshot_OCR main.cpp)
+add_executable(spectacle-ocr-screenshot main.cpp)
 
 # Link libraries
-target_link_libraries(Screenshot_OCR PRIVATE 
+target_link_libraries(spectacle-ocr-screenshot PRIVATE
     Qt6::Core 
     Qt6::Widgets 
     Qt6::Gui 
