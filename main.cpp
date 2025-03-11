@@ -9,49 +9,40 @@
 #include <QtCore/QDir>
 #include <QtWidgets/QMessageBox>
 #include <QtCore/QTimer>
-
-// Tesseract OCR library
+#include <QtWidgets/QFileDialog>
+#include <QtGui/QClipboard>
 #include <tesseract/baseapi.h>
 #include <leptonica/allheaders.h>
 
-// Function to take screenshot with Spectacle
-bool takeScreenshot(const QString &outputPath)
-{
+bool takeScreenshot(const QString& outputPath) {
     QProcess process;
-    process.start("spectacle", QStringList() << "-b" << "-n" << "-o" << outputPath);
+    process.start("spectacle", QStringList() << "-b" << "-r" << "-n" << "-o" << outputPath);
     process.waitForFinished();
     return process.exitCode() == 0;
 }
 
-// Function to perform OCR on an image
-QString performOCR(const QString &imagePath)
-{
-    tesseract::TessBaseAPI *ocr = new tesseract::TessBaseAPI();
+QString extractText(const QString& imagePath) {
+    tesseract::TessBaseAPI* ocr = new tesseract::TessBaseAPI();
 
     // Initialize tesseract with English language
-    if (ocr->Init(nullptr, "eng"))
-    {
+    if (ocr->Init(nullptr, "eng")) {
         delete ocr;
         return "Error initializing Tesseract OCR";
     }
 
     // Open image with Leptonica
-    Pix *image = pixRead(imagePath.toUtf8().constData());
-    if (!image)
-    {
+    Pix* image = pixRead(imagePath.toUtf8().constData());
+    if (!image) {
         ocr->End();
         delete ocr;
         return "Failed to load image";
     }
 
-    // Set image data
     ocr->SetImage(image);
 
-    // Get OCR result
-    char *outText = ocr->GetUTF8Text();
+    char* outText = ocr->GetUTF8Text();
     QString result = QString::fromUtf8(outText);
 
-    // Clean up
     delete[] outText;
     pixDestroy(&image);
     ocr->End();
@@ -60,42 +51,38 @@ QString performOCR(const QString &imagePath)
     return result;
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
 
-    // Create the main window
     QWidget window;
     window.setWindowTitle("Screenshot OCR Tool");
     window.resize(500, 400);
 
-    // Create a layout
-    QVBoxLayout *layout = new QVBoxLayout();
+    QVBoxLayout* layout = new QVBoxLayout();
 
-    // Add a text label
-    QLabel *label = new QLabel("Processing screenshot...");
+    QLabel* label = new QLabel("Processing screenshot...");
     layout->addWidget(label);
 
-    // Add a text edit area to display OCR results
-    QTextEdit *textEdit = new QTextEdit();
-    textEdit->setReadOnly(true);
+    QTextEdit* textEdit = new QTextEdit();
     textEdit->setMinimumHeight(200);
     layout->addWidget(textEdit);
 
-    // Add a button to capture another screenshot
-    QPushButton *button = new QPushButton("Take New Screenshot");
-    layout->addWidget(button);
+    QWidget* buttonContainer = new QWidget();
+    QHBoxLayout* buttonLayout = new QHBoxLayout(buttonContainer);
 
-    // Set the layout to the window
+    QPushButton* copyButton = new QPushButton("Copy to Clipboard");
+    QPushButton* saveButton = new QPushButton("Save to File");
+
+    buttonLayout->addWidget(copyButton);
+    buttonLayout->addWidget(saveButton);
+    layout->addWidget(buttonContainer);
+
     window.setLayout(layout);
 
-    // Create temporary file for screenshot
     QString tempPath = QDir::tempPath() + "/screenshot.png";
 
-    // Function to handle screenshot and OCR
-    auto processScreenshot = [&]()
-    {
-        // Take screenshot
+    auto processScreenshot = [&]() {
+
         label->setText("Taking screenshot...");
         QApplication::processEvents();
 
@@ -104,44 +91,77 @@ int main(int argc, char *argv[])
             label->setText("Extracting text...");
             QApplication::processEvents();
 
-            // Perform OCR on the screenshot
-            QString extractedText = performOCR(tempPath);
+            QString extractedText = extractText(tempPath);
 
-            // Display the extracted text
-            textEdit->setText(extractedText);
-            label->setText("Text extracted successfully");
+            if (extractedText == "Failed to load image" || extractedText == "Error initializing Tesseract OCR") {
+                textEdit->setText(extractedText);
+                //QMessageBox::critical(&window, "Error", extractedText);
+            }
+            else {
+                textEdit->setText(extractedText);
+                label->setText("Text extracted successfully");
+            }
         }
         else
         {
             label->setText("Failed to take screenshot");
             QMessageBox::critical(&window, "Error", "Failed to launch Spectacle or take screenshot");
         }
-    };
+        };
 
-    // Connect button to the screenshot process
-    QObject::connect(button, &QPushButton::clicked, processScreenshot);
+    // Connect copy button to clipboard functionality
+    QObject::connect(copyButton, &QPushButton::clicked, [&]() {
+        if (!textEdit->toPlainText().isEmpty()) {
+            QApplication::clipboard()->setText(textEdit->toPlainText());
+            label->setText("Text copied to clipboard");
+        }
+        else {
+            label->setText("No text to copy");
+        } });
 
-    // Take screenshot first before showing window
-    if (takeScreenshot(tempPath))
-    {
-        // Process the screenshot
-        QString extractedText = performOCR(tempPath);
+        // Connect save button to file save functionality
+        QObject::connect(saveButton, &QPushButton::clicked, [&]() {
+            if (!textEdit->toPlainText().isEmpty()) {
+                QString fileName = QFileDialog::getSaveFileName(&window,
+                    "Save OCR Text", QDir::homePath(), "Text Files (*.txt);;All Files (*)");
 
-        // Update UI with results
-        textEdit->setText(extractedText);
-        label->setText("Text extracted successfully");
+                if (!fileName.isEmpty()) {
+                    QFile file(fileName);
+                    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                        QTextStream out(&file);
+                        out << textEdit->toPlainText();
+                        file.close();
+                        label->setText("Text saved to file");
+                    }
+                    else {
+                        label->setText("Failed to save file");
+                        QMessageBox::critical(&window, "Error", "Failed to save the file");
+                    }
+                }
+            }
+            else {
+                label->setText("No text to save");
+            } });
 
-        // Show window after screenshot is processed
-        window.show();
-    }
-    else
-    {
-        // Show window with error message if screenshot fails
-        textEdit->setText("Failed to take screenshot");
-        label->setText("Error occurred");
-        window.show();
-        QMessageBox::critical(&window, "Error", "Failed to launch Spectacle or take screenshot");
-    }
+            // Take screenshot first before showing window
+            if (takeScreenshot(tempPath)) {
+                // Process the screenshot
+                QString extractedText = extractText(tempPath);
 
-    return app.exec();
+                // Update UI with results
+                textEdit->setText(extractedText);
+                label->setText("Text extracted successfully. You can edit the text before copying or saving.");
+
+                // Show window after screenshot is processed
+                window.show();
+            }
+            else {
+                // Show window with error message if screenshot fails
+                textEdit->setText("Failed to take screenshot");
+                label->setText("Error occurred");
+                window.show();
+                QMessageBox::critical(&window, "Error", "Failed to launch Spectacle or take screenshot");
+            }
+
+            return app.exec();
 }
