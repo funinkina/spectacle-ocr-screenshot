@@ -12,6 +12,7 @@ A simple Qt application that integrates KDE Spectacle screenshot tool with Tesse
 - Edit extracted text before saving
 - Copy text to clipboard
 - Save text to file
+- Save the screenshot as .png
 
 ## Requirements
 
@@ -35,7 +36,7 @@ git clone https://github.com/yourusername/spectacle-ocr-screenshot.git
 cd spectacle-ocr-screenshot
 ```
 
-2. Install dependencies:
+2. Install build dependencies:
 
 For Arch Linux:
 ```bash
