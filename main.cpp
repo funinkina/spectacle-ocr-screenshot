@@ -172,8 +172,7 @@ int main(int argc, char* argv[]) {
         else {
             textEdit->setText(result.text);
             label->setText(
-                "Text extracted successfully. You can edit the text before copying "
-                "or saving.");
+                "Text extracted successfully.");
         }
         window.show();
     }

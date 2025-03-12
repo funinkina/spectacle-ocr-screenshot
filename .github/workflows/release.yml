@@ -1,0 +1,30 @@
+name: Spectacle OCR Screenshot Release Workflow
+
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers on version tags like v1.0.0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: sudo apt update && sudo apt install -y qt6-base-dev tesseract-ocr libleptonica-dev libtesseract-dev
+
+      - name: Build project
+        run: |
+          qmake6 simple.pro
+          make
+          mv spectacle-ocr-screenshot spectacle-ocr-screenshot-${{ github.ref_name }}-linux
+
+      - name: Upload Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: spectacle-ocr-screenshot-${{ github.ref_name }}-linux
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
