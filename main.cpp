@@ -16,13 +16,12 @@
 #include <QVBoxLayout>
 #include <QWidget>
 #include <QHBoxLayout>
+#include <QDateTime>
 
 bool takeScreenshot(const QString& outputPath) {
-    QProcess process;
-    process.start("spectacle", QStringList()
+    int exitCode = QProcess::execute("spectacle", QStringList()
         << "-b" << "-r" << "-n" << "-o" << outputPath);
-    process.waitForFinished();
-    return process.exitCode() == 0;
+    return exitCode == 0;
 }
 
 struct OcrResult {
@@ -99,11 +98,13 @@ int main(int argc, char* argv[]) {
     QWidget* buttonContainer = new QWidget();
     QHBoxLayout* buttonLayout = new QHBoxLayout(buttonContainer);
 
-    QPushButton* copyButton = new QPushButton("Copy to Clipboard");
-    QPushButton* saveButton = new QPushButton("Save to File");
+    QPushButton* copyButton = new QPushButton("Copy Text");
+    QPushButton* saveButton = new QPushButton("Save Text");
+    QPushButton* saveImageButton = new QPushButton("Save Image");
 
     buttonLayout->addWidget(copyButton);
     buttonLayout->addWidget(saveButton);
+    buttonLayout->addWidget(saveImageButton);
     layout->addWidget(buttonContainer);
 
     window.setLayout(layout);
@@ -142,6 +143,22 @@ int main(int argc, char* argv[]) {
         }
         else {
             label->setText("No text to save");
+        }
+        });
+
+    QObject::connect(saveImageButton, &QPushButton::clicked, [&]() {
+        QString timestamp = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss");
+        QString defaultImageName = QDir::homePath() + "/Screenshot_" + timestamp;
+        QString imageFileName = QFileDialog::getSaveFileName(
+            &window, "Save Screenshot", defaultImageName,
+            "Image Files (*.png);;All Files (*)");
+        if (!imageFileName.isEmpty()) {
+            if (QFile::copy(tempPath, imageFileName))
+                label->setText("Screenshot saved successfully");
+            else {
+                label->setText("Failed to save screenshot");
+                QMessageBox::critical(&window, "Error", "Failed to save the screenshot file");
+            }
         }
         });
 
