@@ -63,10 +63,12 @@ DIST          = /usr/lib/qt6/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt6/mkspecs/common/g++-base.conf \
 		/usr/lib/qt6/mkspecs/common/g++-unix.conf \
 		/usr/lib/qt6/mkspecs/qconfig.pri \
+		/usr/lib/qt6/mkspecs/modules/qt_KDSingleApplication.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_KDSoapClient.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_KDSoapServer.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_KF6UserFeedbackCore.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_KF6UserFeedbackWidgets.pri \
+		/usr/lib/qt6/mkspecs/modules/qt_KQuickImageEditor.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_lib_bluetooth.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_lib_bluetooth_private.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_lib_concurrent.pri \
@@ -110,6 +112,8 @@ DIST          = /usr/lib/qt6/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt6/mkspecs/modules/qt_lib_labswavefrontmesh.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_lib_labswavefrontmesh_private.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_lib_linguist.pri \
+		/usr/lib/qt6/mkspecs/modules/qt_lib_location.pri \
+		/usr/lib/qt6/mkspecs/modules/qt_lib_location_private.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_lib_multimedia.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_lib_multimedia_private.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_lib_multimediaquick_private.pri \
@@ -325,7 +329,6 @@ DIST          = /usr/lib/qt6/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt6/mkspecs/features/qt_config.prf \
 		/usr/lib/qt6/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/qt6/mkspecs/features/spec_post.prf \
-		.qmake.stash \
 		/usr/lib/qt6/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/qt6/mkspecs/features/toolchain.prf \
 		/usr/lib/qt6/mkspecs/features/default_pre.prf \
@@ -370,10 +373,12 @@ Makefile: simple.pro /usr/lib/qt6/mkspecs/linux-g++/qmake.conf /usr/lib/qt6/mksp
 		/usr/lib/qt6/mkspecs/common/g++-base.conf \
 		/usr/lib/qt6/mkspecs/common/g++-unix.conf \
 		/usr/lib/qt6/mkspecs/qconfig.pri \
+		/usr/lib/qt6/mkspecs/modules/qt_KDSingleApplication.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_KDSoapClient.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_KDSoapServer.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_KF6UserFeedbackCore.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_KF6UserFeedbackWidgets.pri \
+		/usr/lib/qt6/mkspecs/modules/qt_KQuickImageEditor.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_lib_bluetooth.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_lib_bluetooth_private.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_lib_concurrent.pri \
@@ -417,6 +422,8 @@ Makefile: simple.pro /usr/lib/qt6/mkspecs/linux-g++/qmake.conf /usr/lib/qt6/mksp
 		/usr/lib/qt6/mkspecs/modules/qt_lib_labswavefrontmesh.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_lib_labswavefrontmesh_private.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_lib_linguist.pri \
+		/usr/lib/qt6/mkspecs/modules/qt_lib_location.pri \
+		/usr/lib/qt6/mkspecs/modules/qt_lib_location_private.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_lib_multimedia.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_lib_multimedia_private.pri \
 		/usr/lib/qt6/mkspecs/modules/qt_lib_multimediaquick_private.pri \
@@ -632,7 +639,6 @@ Makefile: simple.pro /usr/lib/qt6/mkspecs/linux-g++/qmake.conf /usr/lib/qt6/mksp
 		/usr/lib/qt6/mkspecs/features/qt_config.prf \
 		/usr/lib/qt6/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/qt6/mkspecs/features/spec_post.prf \
-		.qmake.stash \
 		/usr/lib/qt6/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/qt6/mkspecs/features/toolchain.prf \
 		/usr/lib/qt6/mkspecs/features/default_pre.prf \
@@ -670,10 +676,12 @@ Makefile: simple.pro /usr/lib/qt6/mkspecs/linux-g++/qmake.conf /usr/lib/qt6/mksp
 /usr/lib/qt6/mkspecs/common/g++-base.conf:
 /usr/lib/qt6/mkspecs/common/g++-unix.conf:
 /usr/lib/qt6/mkspecs/qconfig.pri:
+/usr/lib/qt6/mkspecs/modules/qt_KDSingleApplication.pri:
 /usr/lib/qt6/mkspecs/modules/qt_KDSoapClient.pri:
 /usr/lib/qt6/mkspecs/modules/qt_KDSoapServer.pri:
 /usr/lib/qt6/mkspecs/modules/qt_KF6UserFeedbackCore.pri:
 /usr/lib/qt6/mkspecs/modules/qt_KF6UserFeedbackWidgets.pri:
+/usr/lib/qt6/mkspecs/modules/qt_KQuickImageEditor.pri:
 /usr/lib/qt6/mkspecs/modules/qt_lib_bluetooth.pri:
 /usr/lib/qt6/mkspecs/modules/qt_lib_bluetooth_private.pri:
 /usr/lib/qt6/mkspecs/modules/qt_lib_concurrent.pri:
@@ -717,6 +725,8 @@ Makefile: simple.pro /usr/lib/qt6/mkspecs/linux-g++/qmake.conf /usr/lib/qt6/mksp
 /usr/lib/qt6/mkspecs/modules/qt_lib_labswavefrontmesh.pri:
 /usr/lib/qt6/mkspecs/modules/qt_lib_labswavefrontmesh_private.pri:
 /usr/lib/qt6/mkspecs/modules/qt_lib_linguist.pri:
+/usr/lib/qt6/mkspecs/modules/qt_lib_location.pri:
+/usr/lib/qt6/mkspecs/modules/qt_lib_location_private.pri:
 /usr/lib/qt6/mkspecs/modules/qt_lib_multimedia.pri:
 /usr/lib/qt6/mkspecs/modules/qt_lib_multimedia_private.pri:
 /usr/lib/qt6/mkspecs/modules/qt_lib_multimediaquick_private.pri:
@@ -932,7 +942,6 @@ Makefile: simple.pro /usr/lib/qt6/mkspecs/linux-g++/qmake.conf /usr/lib/qt6/mksp
 /usr/lib/qt6/mkspecs/features/qt_config.prf:
 /usr/lib/qt6/mkspecs/linux-g++/qmake.conf:
 /usr/lib/qt6/mkspecs/features/spec_post.prf:
-.qmake.stash:
 /usr/lib/qt6/mkspecs/features/exclusive_builds.prf:
 /usr/lib/qt6/mkspecs/features/toolchain.prf:
 /usr/lib/qt6/mkspecs/features/default_pre.prf:

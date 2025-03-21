@@ -17,6 +17,7 @@
 #include <QWidget>
 #include <QHBoxLayout>
 #include <QDateTime>
+#include <memory>
 
 bool takeScreenshot(const QString& outputPath) {
     int exitCode = QProcess::execute("spectacle", QStringList()
@@ -34,10 +35,9 @@ OcrResult extractText(const QString& imagePath, const QString& language) {
     OcrResult result;
     result.success = true;
 
-    tesseract::TessBaseAPI* ocr = new tesseract::TessBaseAPI();
+    auto ocr = std::make_unique<tesseract::TessBaseAPI>();
 
     if (ocr->Init(nullptr, language.toUtf8().constData())) {
-        delete ocr;
         result.success = false;
         result.errorMessage =
             "Error initializing Tesseract OCR for language: " + language;
@@ -47,7 +47,6 @@ OcrResult extractText(const QString& imagePath, const QString& language) {
     Pix* image = pixRead(imagePath.toUtf8().constData());
     if (!image) {
         ocr->End();
-        delete ocr;
         result.success = false;
         result.errorMessage = "Failed to load image";
         return result;
@@ -61,7 +60,6 @@ OcrResult extractText(const QString& imagePath, const QString& language) {
     delete[] outText;
     pixDestroy(&image);
     ocr->End();
-    delete ocr;
 
     return result;
 }

@@ -1,9 +1,7 @@
-# Created by https://www.toptal.com/developers/gitignore/api/c++,linux
-# Edit at https://www.toptal.com/developers/gitignore?templates=c++,linux
-
 ### C++ ###
 # Prerequisites
 *.d
+.cache
 
 # Compiled Object files
 *.slo
