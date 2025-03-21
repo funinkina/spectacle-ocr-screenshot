@@ -17,7 +17,7 @@ A simple Qt application that integrates KDE Spectacle screenshot tool with Tesse
 ## Requirements
 
 - Qt 6.x
-- Tesseract OCR 
+- Tesseract OCR
 - Leptonica
 - KDE Spectacle
 
@@ -29,14 +29,14 @@ You can download the pre-built packages from the [Releases Page](https://github.
 
 ### Building from Source
 
-1. Clone the repository:
+#### 1. Clone the repository:
 
 ```bash
 git clone https://github.com/yourusername/spectacle-ocr-screenshot.git
 cd spectacle-ocr-screenshot
 ```
 
-2. Install build dependencies:
+#### 2. Install build dependencies:
 
 For Arch Linux:
 ```bash
@@ -45,15 +45,15 @@ sudo pacman -S qt6-base tesseract leptonica spectacle
 
 For Ubuntu/Debian:
 ```bash
-sudo apt install qt6-base-dev libtesseract-dev libleptonica-dev spectacle
+sudo apt install qt6-base-dev tesseract-ocr libleptonica-dev kde-spectacle
 ```
 
 For Fedora:
 ```bash
-sudo dnf install qt6-qtbase-devel tesseract-devel leptonica-devel spectacle
+sudo dnf install qt6-qtbase tesseract leptonica spectacle
 ```
 
-3. Build the project:
+#### 3. Build the project:
 
 ```bash
 git clone https://github.com/funinkina/spectacle-ocr-screenshot
