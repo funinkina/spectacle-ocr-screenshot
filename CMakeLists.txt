@@ -12,6 +12,9 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(Tesseract REQUIRED IMPORTED_TARGET tesseract)
 pkg_check_modules(Leptonica REQUIRED IMPORTED_TARGET lept)
 
+# Find ZXing package
+find_package(ZXing REQUIRED)
+
 # Create executable
 add_executable(spectacle-ocr-screenshot main.cpp)
 
@@ -22,4 +25,9 @@ target_link_libraries(spectacle-ocr-screenshot PRIVATE
     Qt6::Gui 
     PkgConfig::Tesseract
     PkgConfig::Leptonica
+    ${ZXing_LIBRARIES}
+)
+
+target_include_directories(spectacle-ocr-screenshot PRIVATE
+    ${ZXing_INCLUDE_DIRS}
 )

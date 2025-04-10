@@ -1,6 +1,8 @@
 #include <leptonica/allheaders.h>
 #include <tesseract/baseapi.h>
-
+#include <ZXing/ReadBarcode.h>
+#include <ZXing/Barcode.h>
+// qt imports
 #include <QCommandLineParser>
 #include <QDir>
 #include <QProcess>
@@ -17,6 +19,7 @@
 #include <QWidget>
 #include <QHBoxLayout>
 #include <QDateTime>
+#include <QImage>
 #include <memory>
 
 bool takeScreenshot(const QString& outputPath) {
@@ -29,7 +32,46 @@ struct OcrResult {
 	QString text;
 	bool success;
 	QString errorMessage;
+	bool isQrCode = false;
 };
+
+OcrResult detectQrCode(const QString& imagePath) {
+	OcrResult result;
+	result.success = false;
+
+	QImage image(imagePath);
+	if (image.isNull()) {
+		result.errorMessage = "Failed to load image for QR detection";
+		return result;
+	}
+
+	ZXing::ReaderOptions options;
+	options.setFormats(ZXing::BarcodeFormat::QRCode);
+	options.setTryHarder(true);
+
+	const uchar* data = image.constBits();
+	int width = image.width();
+	int height = image.height();
+	int bytesPerLine = image.bytesPerLine();
+
+	ZXing::ImageFormat format = image.format() == QImage::Format_Grayscale8 ?
+		ZXing::ImageFormat::Lum :
+		ZXing::ImageFormat::RGBA;
+
+	ZXing::ImageView imageView(data, width, height, format, bytesPerLine);
+	auto zxingResult = ZXing::ReadBarcode(imageView, options);
+
+	if (zxingResult.isValid()) {
+		result.text = QString::fromStdString(zxingResult.text());
+		result.success = true;
+		result.isQrCode = true;
+	}
+	else {
+		result.errorMessage = "Failed to detect valid QR code";
+	}
+
+	return result;
+}
 
 OcrResult extractText(const QString& imagePath, const QString& language) {
 	OcrResult result;
@@ -161,16 +203,23 @@ int main(int argc, char* argv[]) {
 		});
 
 	if (takeScreenshot(tempPath)) {
-		OcrResult result = extractText(tempPath, language);
+		OcrResult qrResult = detectQrCode(tempPath);
 
-		if (!result.success) {
-			textEdit->setText("");
-			label->setText(result.errorMessage);
+		if (qrResult.success) {
+			textEdit->setText(qrResult.text);
+			label->setText("QR code detected and decoded successfully");
 		}
 		else {
-			textEdit->setText(result.text);
-			label->setText(
-				"Text extracted successfully.");
+			OcrResult ocrResult = extractText(tempPath, language);
+
+			if (!ocrResult.success) {
+				textEdit->setText("");
+				label->setText(ocrResult.errorMessage);
+			}
+			else {
+				textEdit->setText(ocrResult.text);
+				label->setText("Text extracted successfully.");
+			}
 		}
 		window.show();
 	}
