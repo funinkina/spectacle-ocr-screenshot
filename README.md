@@ -1,6 +1,6 @@
 # Spectacle OCR Screenshot
 
-A simple Qt application that integrates KDE Spectacle screenshot tool with Tesseract OCR to extract text from screenshots.
+A simple Qt application that integrates KDE Spectacle screenshot tool with Tesseract OCR to extract text from screenshots as well QR codes.
 
 ![Screenshot](screenshot.png)
 
@@ -8,6 +8,8 @@ A simple Qt application that integrates KDE Spectacle screenshot tool with Tesse
 
 - Capture screenshots using KDE's Spectacle tool
 - Extract text from screenshots using Tesseract OCR
+- Decode QR codes from screenshots
+- Display extracted text in a user-friendly interface
 - Support for multiple languages
 - Edit extracted text before saving
 - Copy text to clipboard
@@ -20,6 +22,7 @@ A simple Qt application that integrates KDE Spectacle screenshot tool with Tesse
 - Tesseract OCR
 - Leptonica
 - KDE Spectacle
+- Zxing (for QR code decoding)
 
 ## Installation
 
@@ -99,7 +102,9 @@ Then you can run the application from anywhere using or by assigning a keyboard 
   - Use ISO 639-3 language codes
   - For multiple languages, join them with '+' (e.g., `--lang eng+hin` for English and Hindi)
 
-Examples:
+- `--disable-qr`: Disable QR code detection
+
+#### Examples:
 ```bash
 # Use English OCR (default)
 ./spectacle-ocr-screenshot
@@ -117,19 +122,11 @@ Tesseract OCR supports many languages. Some common language codes:
 
 - `eng` - English
 - `deu` - German
-- `fra` - French
-- `spa` - Spanish
-- `ita` - Italian
-- `rus` - Russian
-- `jpn` - Japanese
-- `kor` - Korean
-- `chi_sim` - Chinese (Simplified)
-- `chi_tra` - Chinese (Traditional)
-- `ara` - Arabic
 - `hin` - Hindi
 
-You may need to install language packs for Tesseract OCR separately.
+> [!NOTE] 
+>You may need to install language packs for Tesseract OCR separately.
 
 ## License
 
-[MIT](https://github.com/funinkina/spectacle-ocr-screenshot/blob/main/LICENSE)
+[MIT](LICENSE)
