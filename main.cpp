@@ -117,7 +117,13 @@ int main(int argc, char* argv[]) {
 		QStringList() << "lang",
 		"Language(s) for OCR (e.g., eng, hin, or eng+hin for multiple languages)",
 		"language", "eng");
+
+	QCommandLineOption disable_qr(
+		QStringList() << "disable-qr",
+		"Disable QR code detection and extraction.");
+
 	parser.addOption(langOption);
+	parser.addOption(disable_qr);
 	parser.process(app);
 
 	QString language = parser.value(langOption);
@@ -203,23 +209,25 @@ int main(int argc, char* argv[]) {
 		});
 
 	if (takeScreenshot(tempPath)) {
-		OcrResult qrResult = detectQrCode(tempPath);
+		OcrResult result;
+		if (!parser.isSet(disable_qr)) {
+			result = detectQrCode(tempPath);
+			if (result.success) {
+				textEdit->setText(result.text);
+				label->setText("QR code detected and decoded successfully");
+				window.show();
+				return app.exec();
+			}
+		}
 
-		if (qrResult.success) {
-			textEdit->setText(qrResult.text);
-			label->setText("QR code detected and decoded successfully");
+		result = extractText(tempPath, language);
+		if (!result.success) {
+			textEdit->setText("");
+			label->setText(result.errorMessage);
 		}
 		else {
-			OcrResult ocrResult = extractText(tempPath, language);
-
-			if (!ocrResult.success) {
-				textEdit->setText("");
-				label->setText(ocrResult.errorMessage);
-			}
-			else {
-				textEdit->setText(ocrResult.text);
-				label->setText("Text extracted successfully.");
-			}
+			textEdit->setText(result.text);
+			label->setText("Text extracted successfully.");
 		}
 		window.show();
 	}
