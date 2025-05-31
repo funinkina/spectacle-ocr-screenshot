@@ -129,3 +129,7 @@ make
 ## License
 
 [MIT](LICENSE)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=funinkina/spectacle-ocr-screenshot&type=Date)](https://www.star-history.com/#funinkina/spectacle-ocr-screenshot&Date)
