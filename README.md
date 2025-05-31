@@ -26,10 +26,60 @@ A simple Qt application that integrates KDE Spectacle screenshot tool with Tesse
 
 ## Installation
 
-### From Packages
+### Get the binaries from: [Releases Page](https://github.com/funinkina/spectacle-ocr-screenshot/releases/).
 
-You can download the pre-built packages from the [Releases Page](https://github.com/funinkina/spectacle-ocr-screenshot/releases/).
+## Usage
 
+Run the application:
+
+```bash
+./spectacle-ocr-screenshot
+```
+> [!TIP]
+> ## Recommended Usage
+> Create a symlink to the executable in your local `PATH` for easy access:
+>
+> ```bash
+> sudo ln -s spectacle-ocr-screenshot /usr/local/bin/
+> ```
+>
+> Then you can run the application from anywhere using or by assigning a keyboard shortcut to `spectacle-ocr-screenshot`
+
+## The application will:
+1. Launch Spectacle in region selection mode
+2. After capturing, click on save, this will save to `/tmp`
+3. The extracted text will be displayed in the application window
+4. You can edit the text, copy it to clipboard or save it to a file
+
+### Command Line Options
+
+- `--lang <language>`: Specify the language(s) for OCR (default: eng)
+  - Use ISO 639-3 language codes
+  - For multiple languages, join them with '+' (e.g., `--lang eng+hin` for English and Hindi)
+
+- `--disable-qr`: Disable QR code detection
+
+#### Examples:
+```bash
+# Use English OCR (default)
+./spectacle-ocr-screenshot
+
+# Use German OCR
+./spectacle-ocr-screenshot --lang deu
+
+# Use multiple languages (English and Spanish)
+./spectacle-ocr-screenshot --lang eng+spa
+```
+
+## Available Languages
+
+Tesseract OCR supports many languages. Some common language codes:
+
+- `eng` - English
+- `deu` - German
+- `hin` - Hindi
+
+## Manual Installation
 ### Building from Source
 
 #### 1. Clone the repository:
@@ -72,57 +122,6 @@ mkdir build && cd build
 cmake ..
 make
 ```
-
-## Usage
-
-Run the application:
-
-```bash
-./spectacle-ocr-screenshot
-```
-
-## Recommended Usage
-Create a symlink to the executable in your local `PATH` for easy access:
-
-```bash
-sudo ln -s spectacle-ocr-screenshot /usr/local/bin/
-```
-
-Then you can run the application from anywhere using or by assigning a keyboard shortcut to `spectacle-ocr-screenshot`
-
-## The application will:
-1. Launch Spectacle in region selection mode
-2. After capturing, click on save, this will save to `/tmp`
-3. The extracted text will be displayed in the application window
-4. You can edit the text, copy it to clipboard or save it to a file
-
-### Command Line Options
-
-- `--lang <language>`: Specify the language(s) for OCR (default: eng)
-  - Use ISO 639-3 language codes
-  - For multiple languages, join them with '+' (e.g., `--lang eng+hin` for English and Hindi)
-
-- `--disable-qr`: Disable QR code detection
-
-#### Examples:
-```bash
-# Use English OCR (default)
-./spectacle-ocr-screenshot
-
-# Use German OCR
-./spectacle-ocr-screenshot --lang deu
-
-# Use multiple languages (English and Spanish)
-./spectacle-ocr-screenshot --lang eng+spa
-```
-
-## Available Languages
-
-Tesseract OCR supports many languages. Some common language codes:
-
-- `eng` - English
-- `deu` - German
-- `hin` - Hindi
 
 > [!NOTE] 
 >You may need to install language packs for Tesseract OCR separately.
