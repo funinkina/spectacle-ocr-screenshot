@@ -6,15 +6,15 @@ A simple Qt application that integrates KDE Spectacle screenshot tool with Tesse
 
 ## Features
 
-- Capture screenshots using KDE's Spectacle tool
-- Extract text from screenshots using Tesseract OCR
-- Decode QR codes from screenshots
-- Display extracted text in a user-friendly interface
-- Support for multiple languages
-- Edit extracted text before saving
-- Copy text to clipboard
-- Save text to file
-- Save the screenshot as .png
+- 📷 Capture screenshots using KDE's Spectacle tool
+- 🔍 Extract text from screenshots using Tesseract OCR
+- 📱 Decode QR codes from screenshots
+- 💻 Display extracted text in a user-friendly interface
+- 🌍 Support for multiple languages
+- ✏️ Edit extracted text before saving
+- 📋 Copy text to clipboard
+- 💾 Save text to file
+- 🖼️ Save the screenshot as .png
 
 ## Requirements
 
