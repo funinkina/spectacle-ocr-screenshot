@@ -1,7 +1,6 @@
 #include <leptonica/allheaders.h>
 #include <tesseract/baseapi.h>
 #include <ZXing/ReadBarcode.h>
-#include <ZXing/Barcode.h>
 // qt imports
 #include <QCommandLineParser>
 #include <QDir>
@@ -56,7 +55,7 @@ OcrResult detectQrCode(const QString& imagePath) {
 
 	ZXing::ImageFormat format = image.format() == QImage::Format_Grayscale8 ?
 		ZXing::ImageFormat::Lum :
-		ZXing::ImageFormat::RGBA;
+		ZXing::ImageFormat::RGB;
 
 	ZXing::ImageView imageView(data, width, height, format, bytesPerLine);
 	auto zxingResult = ZXing::ReadBarcode(imageView, options);
