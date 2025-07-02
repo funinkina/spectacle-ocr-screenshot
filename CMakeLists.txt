@@ -25,7 +25,7 @@ target_link_libraries(spectacle-ocr-screenshot PRIVATE
     Qt6::Gui 
     PkgConfig::Tesseract
     PkgConfig::Leptonica
-    ${ZXing_LIBRARIES}
+    ZXing::ZXing
 )
 
 target_include_directories(spectacle-ocr-screenshot PRIVATE
