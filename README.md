@@ -85,7 +85,7 @@ Tesseract OCR supports many languages. Some common language codes:
 #### 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/spectacle-ocr-screenshot.git
+git clone https://github.com/funinkina/spectacle-ocr-screenshot.git
 cd spectacle-ocr-screenshot
 ```
 
@@ -109,7 +109,6 @@ sudo dnf install qt6-qtbase tesseract leptonica spectacle
 #### 3. Build the project:
 
 ```bash
-git clone https://github.com/funinkina/spectacle-ocr-screenshot
 qmake6 simple.pro
 make
 ```
